@@ -1,9 +1,11 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import "./index.css";
+import EditButtons from "../EditButtons";
 
-export default function CategoriesList({ categories }) {
+export default function CategoriesList({ categories, onEdit, onDelete }) {
   if (!categories && !categories?.length) {
     return null;
   }
@@ -12,13 +14,11 @@ export default function CategoriesList({ categories }) {
     <div className="category-list">
       {categories.map((category) => {
         return (
-          <button
+          <Link
             key={category.id}
             className="card"
             style={{ borderRadius: "0px", border: "none" }}
-            onClick={() => {
-              console.log("TODO: Navigate to categories page");
-            }}
+            to={`/categories`}
           >
             <div
               className="card-body w-100"
@@ -35,7 +35,15 @@ export default function CategoriesList({ categories }) {
                 {category.description.substring(1, 100)} ...
               </p>
             </div>
-          </button>
+            {onEdit && onDelete && (
+              <EditButtons onEdit={()=>{
+                onEdit(category);
+              
+              }} onDelete={()=>{
+                onDelete(category);
+              }} />
+            )}
+          </Link>
         );
       })}
     </div>
@@ -44,4 +52,6 @@ export default function CategoriesList({ categories }) {
 
 CategoriesList.prototype = {
   categories: PropTypes.array.isRequired,
+  onEdit: PropTypes.func,
+  onDelete: PropTypes.func,
 };

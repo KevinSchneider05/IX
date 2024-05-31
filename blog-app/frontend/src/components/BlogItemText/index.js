@@ -1,31 +1,38 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import BlogItem from "../BlogItem";
+import Categories from "../Categories";
+import "./index.css";
 
-export default function BlogList({ blogPosts }) {
-  if (!blogPosts && !blogPosts?.length) {
-    return null;
-  }
-
-  // TODO: Styling
+export default function BlogItemText({ blogPost, headerFontSize }) {
   return (
-    <div className="d-flex w-100">
-      {blogPosts.map((blog, index) => {
-        return (
-          <BlogItem
-            key={index}
-            index={index}
-            blogPost={blog}
-            setBlog={() => {}}
-            imageOrientation={"top"}
-          />
-        );
-      })}
+    <div>
+      <div style={{ display: "flex" }}>
+        <p className="date-author-text">
+          {blogPost.author.firstName} {blogPost.author.lastName}
+        </p>
+        <div className="dot-divider"></div>
+        <p className="date-author-text">
+          {blogPost.createdAt.substring(0, 10)}
+        </p>
+      </div>
+      <p
+        style={{
+          fontSize: headerFontSize,
+          fontWeight: "bold",
+          textAlign: "left",
+        }}
+      >
+        {blogPost.title}
+      </p>
+      <p style={{ fontSize: "16px", color: "#667085", textAlign: "left" }}>
+        {blogPost.description.substring(0, 100)}...
+      </p>
+      <Categories blogPost={blogPost?.categories} />
     </div>
   );
 }
-
-BlogList.prototype = {
-    blogPosts: PropTypes.array.isRequired,
+BlogItemText.propTypes = {
+  blogPost: PropTypes.array.isRequired,
+  headerFontSize: PropTypes.string.isRequired,
 };
