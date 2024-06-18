@@ -3,6 +3,7 @@ const createBlog = async (blog) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: "Bearer " + JSON.parse(localStorage.getItem("user")).token,
     },
     body: JSON.stringify(blog),
   });
@@ -45,7 +46,7 @@ const fetchBlogs = async () => {
   return blogsApiData;
 };
 
-const fetchBlogById = async (id) => {
+const fetchBlogByID = async (id) => {
   const response = await fetch("http://localhost:8000/api/blogs/" + id, {
     method: "GET",
     headers: {
@@ -67,7 +68,7 @@ const fetchBlogById = async (id) => {
   return blogsApiData;
 };
 
-const getBlogsByCategoryId = async (categoryId) => {
+const fetchBlogsByCategoryId = async (categoryId) => {
   const response = await fetch(
     "http://localhost:8000/api/blogs/categories/" + categoryId,
     {
@@ -122,6 +123,7 @@ const updateBlog = async (blog) => {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
+      Authorization: "Bearer " + JSON.parse(localStorage.getItem("user")).token,
     },
     body: JSON.stringify(blog),
   });
@@ -145,6 +147,7 @@ const deleteBlog = async (id) => {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
+      Authorization: "Bearer " + JSON.parse(localStorage.getItem("user")).token,
     },
   });
 
@@ -166,8 +169,8 @@ const deleteBlog = async (id) => {
 const blogService = {
   createBlog,
   fetchBlogs,
-  fetchBlogById,
-  getBlogsByCategoryId,
+  fetchBlogByID,
+  fetchBlogsByCategoryId,
   fetchBlogsByAuthorId,
   updateBlog,
   deleteBlog,
