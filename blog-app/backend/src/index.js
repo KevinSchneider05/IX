@@ -8,6 +8,8 @@ const authRoutes = require("./routes/auth");
 
 const connectDB = require("./database/db");
 
+const path = require("path");
+
 connectDB();
 
 const port = process.env.PORT || 8000;
@@ -20,6 +22,7 @@ app.use(express.json());
 app.use("/api/blogs", blogsRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

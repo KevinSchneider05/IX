@@ -4,6 +4,7 @@ import { Modal } from "bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 
 import Categories from "../Categories";
+import FormImage from "../FormImage";
 
 import {
   createBlog,
@@ -19,6 +20,10 @@ export default function AddEditBlogModal() {
   const { categories } = useSelector((state) => state.categories);
 
   const [blog, setBlog] = useState();
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+const [blogImage, setBlogImage] = useState("");
 
   const modalEl = document.getElementById("addEditModal");
 
@@ -36,16 +41,37 @@ export default function AddEditBlogModal() {
     }
   }, [addBlog, editBlog, addEditModal]);
 
+  const buildFormData = () => {
+    const formData = new FormData();
+    formData.append("id", blog.id);
+    formData.append("image", blog.image);
+    formData.append("title", blog.title);
+    formData.append("description", blog.description);
+    formData.append("categories", JSON.stringify(blog.categories));
+    formData.append("content", JSON.stringify(blog.content));
+      formData.append("authorId", user?._id);
+    return formData;
+  };
+  
   const onSubmit = (e) => {
     e?.preventDefault();
     if (isFormValid()) {
+      const blogForm = buildFormData();
       if (addBlog) {
-        dispatch(createBlog(blog));
+        dispatch(createBlog(blogForm));
       } else if (editBlog) {
-        dispatch(updateBlog(blog));
+        dispatch(updateBlog(blogForm));
       }
       resetBlog();
       addEditModal?.hide();
+    }
+  };
+  
+  const onImageChange = (e) => {
+    if (e?.target?.files?.length) {
+      const file = e.target.files[0];
+      setBlogImage(URL.createObjectURL(file));
+      setBlog({ ...blog, image: file });
     }
   };
 
@@ -169,6 +195,9 @@ export default function AddEditBlogModal() {
                     required
                   />
                   <div className="valid-feedback">Looks good!</div>
+                </div>
+                <div className="mb-3">
+                <FormImage image={blogImage} onChange={onImageChange} />
                 </div>
                 <div className="mb-3">
                   <label htmlFor="description" className="form-label">
